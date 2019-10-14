@@ -1,0 +1,4 @@
+lookahead_distance: 0.15
+reference_points: 10
+lane_size: 0.585
+linear_speed: 0.1
