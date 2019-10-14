@@ -97,15 +97,15 @@ class PurePursuitNode(object):
         return lane_center_list
 
     def calculate_speed(self, segment_list_msg):
-        self.log_info("{}".format(segment_list_msg))
+        # self.log_info("{}".format(segment_list_msg))
 
         # Get lane centers
         lane_center_list = self.lane_centers(segment_list_msg)
-        self.log_info(str(lane_center_list))
+        # self.log_info(str(lane_center_list))
 
         # Filter lane center
         valid_lane_centers = self.filter_lane_centers(lane_center_list)
-        self.log_info(str(valid_lane_centers))
+        # self.log_info(str(valid_lane_centers))
 
         # Average valid lane centers, if none is valid set straight as goal
         if valid_lane_centers:
@@ -114,12 +114,12 @@ class PurePursuitNode(object):
         else:
             x, y = 10, 0
 
-        self.log_info("{} - {}".format(x, y))
+        # self.log_info("{} - {}".format(x, y))
         # Calculate the angular speed
         omega = 2 * self.v * y / (x ** 2 + y ** 2)
 
-        self.log_info("{} - {}".format(self.v, omega))
-        self.log_info('------------------')
+        # self.log_info("{} - {}".format(self.v, omega))
+        # self.log_info('------------------')
         # Publish the speed
         self.publish_cmd(self.v, omega)
 
