@@ -1,0 +1,47 @@
+<launch>
+	<arg name="veh" default="$(env VEHICLE_NAME)"/>
+	<arg name="ai_trafo_mode" default="cb" doc="'cb' for colo balance only; 'both' for color balance and linear trafo"/>
+	<arg name="ai_interval" default="5" doc="interval with which the linear trafo gets updated. color balance is performed every second."/>
+	<arg name="verbose" default="false"/>
+    <arg name="/lane_following/pure_pursuit_controller" default="true"/>
+
+
+	<!-- start basic args -->
+	<include file="$(find duckietown_demos)/launch/master.launch">
+		<arg name="veh" value="$(arg veh)"/>
+		<arg name="visualization" default="true" />
+		<!--arg name="verbose" value="$(arg verbose)" /-->
+    	<arg name="/camera/raw" default="true" />
+		<arg name="param_file_name" default="default" />
+		<arg name="line_detector_param_file_name" default="default" />
+		<arg name="anti_instagram" default="true" />
+		<arg name="ai_trafo_mode" value="$(arg ai_trafo_mode)"/>
+		<arg name="ai_interval" value="$(arg ai_interval)"/>
+		<arg name="/lane_following/stop_line_filter" default="false" /> <!-- will not every allow a transition into COORDINATION mode -->
+		<arg name="vehicle_avoidance" default="false"/>
+		<arg name="/lane_following/lane_controller" default="false"/>
+	</include>
+
+    <!-- launch pure pursuit node -->
+	<group if="$(arg /lane_following/pure_pursuit_controller)">
+<!--		<remap from="~/segment_list_filtered" to="ground_projection/lineseglist_out"/>-->
+		<remap from="~/segment_list_filtered" to="lane_filter_node/seglist_filtered"/>
+		<remap from="~/car_cmd" to="lane_controller_node/car_cmd"/>
+		<include file="$(find pure_pursuit)/launch/pure_pursuit_node.launch">
+			<arg name="veh" value="$(arg veh)"/>
+			<arg name="param_file_name" default="default"/>
+		</include>
+	</group>
+
+</launch>
+<!--		<remap from="lane_controller_node/lane_pose" to="lane_filter_node/lane_pose"/>-->
+<!--		&lt;!&ndash;NO!!! <remap from="fsm_node/mode" to="fsm_node/lane_pose_intersection_navigation"/> &ndash;&gt;&lt;!&ndash;TODO what is this &ndash;&gt;-->
+<!--		&lt;!&ndash; <remap from="lane_controller_node/lane_pose_obstacle_avoidance" to="lane_filter_node/lane_pose_obstacle_avoidance"/> TODO: add correct node_name-->
+<!--		<remap from="lane_controller_node/lane_pose_parking" to="lane_filter_node/lane_pose_parking"/>-->
+<!--		<remap from="lane_controller_node/implicit_coordination_velocity" to="lane_filter_node/implicit_coordination_velocity"/> &ndash;&gt;-->
+<!--		<remap from="lane_controller_node/wheels_cmd_executed" to="wheels_driver_node/wheels_cmd_executed" />-->
+<!--		<remap from="lane_controller_node/fsm_mode" to="fsm_node/mode" />-->
+<!--		<remap from="lane_controller_node/obstacle_avoidance_pose" to="obst_avoid/obstacle_avoidance_pose" />-->
+<!--		<remap from="lane_controller_node/obstacle_detected" to="obstacle_avoidance_node/obstacle_avoidance_active_flag" />-->
+<!--		<remap from="lane_controller_node/stop_line_reading" to="stop_line_filter_node/stop_line_reading" />-->
+<!--		<remap from="wheels_driver_node/radius_limit" to="lane_controller_node/radius_limit" />-->
