@@ -100,7 +100,7 @@ class SensorFusionNode(object):
         omega = self.alpha * 2 * self.v * y / (x ** 2 + y ** 2)
 
         # Log the speed
-        self.file.write("[CMD]: {}, {}, {}".format(self.v, omega, rospy.get_rostime().nsecs - self.init_time))
+        self.file.write("[CMD]: {}, {}, {}\n".format(self.v, omega, rospy.get_rostime().nsecs - self.init_time))
         # Publish the speed
         self.publish_cmd(self.v, omega)
 
@@ -122,7 +122,7 @@ class SensorFusionNode(object):
         v_ref = lane_pose_msg.v_ref
         status = lane_pose_msg.status
         in_lane = lane_pose_msg.in_lane
-        msg = "[ERR]: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(d, d_ref, sigma_d, phi, phi_ref, sigma_phi,
+        msg = "[ERR]: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(d, d_ref, sigma_d, phi, phi_ref, sigma_phi,
                                                                              curvature, curvature_ref, v_ref, status,
                                                                              in_lane, rospy.get_rostime().nsecs - self.init_time)
         self.file.write(msg)
