@@ -112,19 +112,8 @@ class SensorFusionNode(object):
 
     def log_to_file(self, lane_pose_msg):
         d = lane_pose_msg.d
-        d_ref = lane_pose_msg.d_ref
-        sigma_d = lane_pose_msg.sigma_d
         phi = lane_pose_msg.phi
-        phi_ref = lane_pose_msg.phi_ref
-        sigma_phi = lane_pose_msg.sigma_phi
-        curvature = lane_pose_msg.curvature
-        curvature_ref = lane_pose_msg.curvature_ref
-        v_ref = lane_pose_msg.v_ref
-        status = lane_pose_msg.status
-        in_lane = lane_pose_msg.in_lane
-        msg = "[ERR]: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(d, d_ref, sigma_d, phi, phi_ref, sigma_phi,
-                                                                             curvature, curvature_ref, v_ref, status,
-                                                                             in_lane, rospy.get_rostime().nsecs - self.init_time)
+        msg = "[ERR]: {}, {}, {}\n".format(d, phi, rospy.get_rostime().nsecs - self.init_time)
         self.file.write(msg)
 
     def on_shutdown(self):
