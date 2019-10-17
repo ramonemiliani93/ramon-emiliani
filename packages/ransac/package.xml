@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>pure_pursuit</name>
+  <name>ransac</name>
   <version>1.0.0</version>
-  <description>TODO: Add a description of package `pure_pursuit` in `package.xml`.</description>
+  <description>TODO: Add a description of package `ransac` in `package.xml`.</description>
 
   <maintainer email="ramon.emiliani@umontreal.ca">Ramon Emiliani</maintainer>
   <license>GPLv3</license>

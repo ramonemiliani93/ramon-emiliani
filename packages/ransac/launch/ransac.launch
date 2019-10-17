@@ -3,7 +3,7 @@
 	<arg name="ai_trafo_mode" default="cb" doc="'cb' for colo balance only; 'both' for color balance and linear trafo"/>
 	<arg name="ai_interval" default="5" doc="interval with which the linear trafo gets updated. color balance is performed every second."/>
 	<arg name="verbose" default="false"/>
-    <arg name="/lane_following/pure_pursuit_controller" default="true"/>
+    <arg name="/lane_following/ransac_controller" default="true"/>
 
 
 	<!-- start basic args -->
@@ -22,12 +22,12 @@
 		<arg name="/lane_following/lane_controller" default="false"/>
 	</include>
 
-    <!-- launch pure pursuit node -->
-	<group if="$(arg /lane_following/pure_pursuit_controller)">
+    <!-- launch ransac node -->
+	<group if="$(arg /lane_following/ransac_controller)">
 		<remap from="~/segment_list_filtered" to="ground_projection/lineseglist_out"/>
 <!--		<remap from="~/segment_list_filtered" to="lane_filter_node/seglist_filtered"/>-->
 		<remap from="~/car_cmd" to="lane_controller_node/car_cmd"/>
-		<include file="$(find pure_pursuit)/launch/pure_pursuit_node.launch">
+		<include file="$(find ransac)/launch/ransac_node.launch">
 			<arg name="veh" value="$(arg veh)"/>
 			<arg name="param_file_name" default="default"/>
 		</include>

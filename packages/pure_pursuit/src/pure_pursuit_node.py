@@ -7,7 +7,7 @@ import rospy
 from sensor_msgs.msg import Image
 from std_msgs.msg import Float32, String
 import json
-import heapq
+import numpy as np
 
 
 class PurePursuitNode(object):
@@ -16,7 +16,7 @@ class PurePursuitNode(object):
         self.node_name = "Pure Pursuit"
 
         # My variables
-        self.colors = {1, 2}
+        self.colors = {0, 1}
         self.lookahead_distance = self.setup_parameter("~lookahead_distance", 0.10)
         self.reference_points = self.setup_parameter("~reference_points", 2)
         self.lane_size = self.setup_parameter("~lane_size", 0.585)
@@ -43,6 +43,9 @@ class PurePursuitNode(object):
     def closest_segments_to_lookahead(self, segment_list):
         # Get the closest point to the lookahead distance on the ground projection by averaging the two endpoints of
         # the segments, then sort the points in the segment in ascending distance.
+        s = [(segment.color, np.mean([segment.points[0].x, segment.points[1].x]), np.mean([segment.points[0].y, segment.points[1].y])) for segment in segment_list if segment.color in self.colors]
+        self.log_info("{}".format(s))
+        self.log_info("-----------------")
         segment_list = sorted(segment_list, key=self.average_minus_lookahead)[:self.reference_points]
         if segment_list:
             for segment in segment_list:
@@ -80,8 +83,10 @@ class PurePursuitNode(object):
         #     x, y = -dy / norm, dx / norm
         if segment.color == 0:
             x, y = -dy / norm, dx / norm
-        if segment.color == 1:
+        elif segment.color == 1:
             x, y = dy / norm, -dx / norm
+        else:
+            x, y = 0, 0
 
         # Calculate the lane center using the normal vector, first point, and the lane size
         lane_center_x = point_1.x + x * (self.lane_size / 2)
@@ -109,8 +114,10 @@ class PurePursuitNode(object):
 
         # Average valid lane centers, if none is valid set straight as goal
         if valid_lane_centers:
-            x = sum([lc[0] for lc in valid_lane_centers]) / len(valid_lane_centers)
-            y = sum([lc[1] for lc in valid_lane_centers]) / len(valid_lane_centers)
+            # x = sum([lc[0] for lc in valid_lane_centers]) / len(valid_lane_centers)
+            # y = sum([lc[1] for lc in valid_lane_centers]) / len(valid_lane_centers)
+            x = np.median([lc[0] for lc in valid_lane_centers])
+            y = np.median([lc[1] for lc in valid_lane_centers])
         else:
             x, y = 10, 0
 
@@ -127,7 +134,7 @@ class PurePursuitNode(object):
         car_control_msg = Twist2DStamped()
         car_control_msg.v = v
         car_control_msg.omega = omega
-        self.pub_car_cmd.publish(car_control_msg)
+        # self.pub_car_cmd.publish(car_control_msg)
 
     def on_shutdown(self):
         rospy.loginfo("[{}] Shutdown.".format(self.node_name))

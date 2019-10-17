@@ -2,7 +2,7 @@
 import rospy 
 from duckietown_msgs.msg import SegmentList, Segment
 
-class PurePursuitTesterNode(object):
+class RansacTesterNode(object):
     def __init__(self):
         #node_name = "Lane Filter Tester"
         pub_fake_segment_list = rospy.Publisher("~segment_list", SegmentList, queue_size=1)
@@ -22,16 +22,16 @@ class PurePursuitTesterNode(object):
         elif color=="red":
             seg.color=seg.RED
         else:
-            print "error no color specified"
+            print("error no color specified")
         seg_list = SegmentList()
         seg_list.segments.append(seg)
         pub_fake_segment_list.publish(seg_list)
 
-
     def onShutdown(self):
         rospy.loginfo("[PurePursuitTesterNode] Shutdown.")
 
+
 if __name__ == '__main__':
     rospy.init_node('pure_pursuit_tester', anonymous=False)
-    pure_pursuit_tester_node = PurePursuitTesterNode()
+    pure_pursuit_tester_node = RansacTesterNode()
     rospy.on_shutdown(pure_pursuit_tester_node.onShutdown)
