@@ -15,7 +15,7 @@ import copy
 class SensorFusionNode(object):
 
     def __init__(self):
-        self.node_name = "Pure Pursuit"
+        self.node_name = "Sensor Fusion"
 
         # My variables
         self.colors = {0, 1}
