@@ -10,6 +10,7 @@ import json
 import numpy as np
 import collections
 import copy
+import time
 
 
 class SensorFusionNode(object):
@@ -24,6 +25,7 @@ class SensorFusionNode(object):
         self.lane_size = self.setup_parameter("~lane_size", 0.585)
         self.v = self.setup_parameter("~linear_speed", 0.4)
         self.alpha = self.setup_parameter("~alpha", 1.5)
+        self.init_time = time.time_ns()
 
         # Log file
         self.file = open("/data/logs/log.txt", "w")
@@ -99,7 +101,7 @@ class SensorFusionNode(object):
         omega = self.alpha * 2 * self.v * y / (x ** 2 + y ** 2)
 
         # Log the speed
-        self.file.write("[CMD]: {}, {}, {}\n".format(self.v, omega, rospy.get_rostime().nsecs))
+        self.file.write("[CMD]: {}, {}, {}\n".format(self.v, omega, time.time_ns() - self.init_time))
         # Publish the speed
         self.publish_cmd(self.v, omega)
 
@@ -112,7 +114,7 @@ class SensorFusionNode(object):
     def log_to_file(self, lane_pose_msg):
         d = lane_pose_msg.d
         phi = lane_pose_msg.phi
-        msg = "[ERR]: {}, {}, {}\n".format(d, phi, rospy.get_rostime().nsecs)
+        msg = "[ERR]: {}, {}, {}\n".format(d, phi, time.time_ns() - self.init_time)
         self.file.write(msg)
 
     def on_shutdown(self):
