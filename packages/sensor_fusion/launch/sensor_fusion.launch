@@ -25,7 +25,7 @@
     <!-- launch pure pursuit node -->
 	<group if="$(arg /lane_following/sensor_fusion_controller)">
 		<remap from="~/segment_list_filtered" to="ground_projection/lineseglist_out"/>
-		<remap from="~/lane_pose" to="lane_filter/lane_pose"/>
+		<remap from="~/lane_pose" to="lane_filter_node/lane_pose"/>
 <!--		<remap from="~/segment_list_filtered" to="lane_filter_node/seglist_filtered"/>-->
 		<remap from="~/car_cmd" to="lane_controller_node/car_cmd"/>
 		<include file="$(find sensor_fusion)/launch/sensor_fusion_node.launch">
